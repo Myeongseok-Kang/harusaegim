@@ -1,1 +1,9 @@
-# harusaegim
+![image](https://github.com/user-attachments/assets/94ed3fa7-a282-40ea-9e28-bfc5ae26c567)
+![image](https://github.com/user-attachments/assets/adcb37e3-f22a-45d7-902a-73ab13a5b12c)
+![image](https://github.com/user-attachments/assets/5bc363f1-680a-4812-9b90-49e75c3dd247)
+![image](https://github.com/user-attachments/assets/88b3e65f-2349-43d5-92e7-6123a1774b51)
+![image](https://github.com/user-attachments/assets/10694533-e73a-4e57-a14e-535a071fddb5)
+![image](https://github.com/user-attachments/assets/cc5adb33-27bf-4629-b91f-8a4192018743)
+![image](https://github.com/user-attachments/assets/3cc2e115-3dc4-4876-8a45-a67d6613fb55)
+![image](https://github.com/user-attachments/assets/5322fe24-323f-43c4-94df-6484384e980d)
+![image](https://github.com/user-attachments/assets/b5deafa3-c88e-4788-8a11-910fa8ae9a6d)
