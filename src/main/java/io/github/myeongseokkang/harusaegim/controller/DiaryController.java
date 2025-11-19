@@ -1,27 +1,32 @@
 package io.github.myeongseokkang.harusaegim.controller;
 
-import io.github.myeongseokkang.harusaegim.entity.Diary;
+import io.github.myeongseokkang.harusaegim.dto.DiaryCreateRequest;
 import io.github.myeongseokkang.harusaegim.dto.DiaryUpdateRequest;
+import io.github.myeongseokkang.harusaegim.entity.Diary;
 import io.github.myeongseokkang.harusaegim.service.DiaryService;
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/diaries")
 public class DiaryController {
-    private final DiaryService diaryService;
-    public DiaryController(DiaryService diaryService) { this.diaryService = diaryService; }
 
-    @PostMapping("/generate")
-    public ResponseEntity<Diary> generate(@RequestAttribute("userId") Long userId,
-                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        LocalDate d = date == null ? LocalDate.now() : date;
-        return ResponseEntity.ok(diaryService.generate(userId, d));
+    private final DiaryService diaryService;
+
+    public DiaryController(DiaryService diaryService) {
+        this.diaryService = diaryService;
+    }
+
+    /**
+     * 수동 입력 기반 일기 생성 (GPT 호출)
+     */
+    @PostMapping
+    public ResponseEntity<Diary> create(@RequestAttribute("userId") Long userId,
+                                        @Valid @RequestBody DiaryCreateRequest req) {
+        return ResponseEntity.ok(diaryService.create(userId, req));
     }
 
     @GetMapping
@@ -30,17 +35,21 @@ public class DiaryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Diary> get(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
+    public ResponseEntity<Diary> get(@RequestAttribute("userId") Long userId,
+                                     @PathVariable Long id) {
         return ResponseEntity.ok(diaryService.get(userId, id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Diary> update(@RequestAttribute("userId") Long userId, @PathVariable Long id, @Valid @RequestBody DiaryUpdateRequest req) {
+    public ResponseEntity<Diary> update(@RequestAttribute("userId") Long userId,
+                                        @PathVariable Long id,
+                                        @Valid @RequestBody DiaryUpdateRequest req) {
         return ResponseEntity.ok(diaryService.update(userId, id, req));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@RequestAttribute("userId") Long userId, @PathVariable Long id) {
+    public ResponseEntity<Void> delete(@RequestAttribute("userId") Long userId,
+                                       @PathVariable Long id) {
         diaryService.delete(userId, id);
         return ResponseEntity.ok().build();
     }

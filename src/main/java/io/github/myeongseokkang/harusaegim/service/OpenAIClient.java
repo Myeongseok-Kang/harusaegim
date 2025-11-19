@@ -16,6 +16,7 @@ import java.util.Map;
 
 @Service
 public class OpenAIClient {
+
     private final String apiKey;
     private final String model;
     private final String baseUrl;
@@ -30,14 +31,24 @@ public class OpenAIClient {
         this.apiKey = apiKey;
         this.model = model;
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
-        this.http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(20)).build();
+        this.http = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(20))
+                .build();
     }
 
+    /**
+     * system / user 텍스트를 함께 보내는 헬퍼
+     */
     public String respond(String systemText, String userText) {
         String merged = "System:\n" + systemText + "\n\nUser:\n" + userText;
         return respond(merged);
     }
 
+    /**
+     * OpenAI Responses API 호출
+     * - 에러/타임아웃/파싱 실패 시 예외를 던지지 않고 빈 문자열("")을 반환한다.
+     *   (상위 서비스에서 fallback 처리 용도)
+     */
     public String respond(String inputText) {
         try {
             Map<String, Object> body = new HashMap<>();
@@ -58,7 +69,8 @@ public class OpenAIClient {
             String raw = new String(res.body(), StandardCharsets.UTF_8);
 
             if (res.statusCode() / 100 != 2) {
-                throw new RuntimeException("openai error " + res.statusCode() + ": " + raw);
+                System.err.println("OpenAI error " + res.statusCode() + ": " + raw);
+                return "";
             }
 
             JsonNode root = om.readTree(raw);
@@ -85,10 +97,11 @@ public class OpenAIClient {
                 }
             }
 
-            System.out.println("OpenAI raw response (no text parsed) >>> " + raw);
+            System.err.println("OpenAI response parsed but no text found >>> " + raw);
             return "";
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return "";
         }
     }
 }
