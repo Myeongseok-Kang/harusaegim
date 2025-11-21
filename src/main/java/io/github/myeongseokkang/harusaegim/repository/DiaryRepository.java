@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByUserIdAndDate(Long userId, LocalDate date);
-    List<Diary> findByUserIdAndDateBetweenOrderByDateAsc(Long userId, LocalDate start, LocalDate end); // 리포트 만들 때 사용
-    List<Diary> findByUserIdOrderByDateDesc(Long userId); // 최근 일기 목록 가져옴
+    List<Diary> findByUserIdAndDateBetweenOrderByDateAsc(Long userId, LocalDate start, LocalDate end);
+    List<Diary> findByUserIdOrderByDateDesc(Long userId);
 }
