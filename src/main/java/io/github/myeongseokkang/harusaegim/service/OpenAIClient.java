@@ -36,19 +36,13 @@ public class OpenAIClient {
                 .build();
     }
 
-    /**
-     * system / user 텍스트를 함께 보내는 헬퍼
-     */
+
     public String respond(String systemText, String userText) {
         String merged = "System:\n" + systemText + "\n\nUser:\n" + userText;
         return respond(merged);
     }
 
-    /**
-     * OpenAI Responses API 호출
-     * - 에러/타임아웃/파싱 실패 시 예외를 던지지 않고 빈 문자열("")을 반환한다.
-     *   (상위 서비스에서 fallback 처리 용도)
-     */
+
     public String respond(String inputText) {
         try {
             Map<String, Object> body = new HashMap<>();

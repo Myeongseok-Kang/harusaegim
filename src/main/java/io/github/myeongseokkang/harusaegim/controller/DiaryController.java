@@ -20,9 +20,7 @@ public class DiaryController {
         this.diaryService = diaryService;
     }
 
-    /**
-     * 수동 입력 기반 일기 생성 (GPT 호출)
-     */
+
     @PostMapping
     public ResponseEntity<Diary> create(@RequestAttribute("userId") Long userId,
                                         @Valid @RequestBody DiaryCreateRequest req) {

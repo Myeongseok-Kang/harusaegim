@@ -13,19 +13,23 @@ public class TokenAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        //preflight 제외
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) return true;
 
+        //토큰 없음
         String token = request.getHeader("X-Auth-Token");
-        if (token == null || token.isBlank()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
+        if (token == null || token.isBlank()) return unauthorized(response);
+
+        //인증 실패(null)
         Long userId = authService.authenticate(token);
-        if (userId == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
+        if (userId == null) return unauthorized(response);
+
         request.setAttribute("userId", userId);
         return true;
+    }
+
+    private boolean unauthorized(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //401
+        return false;
     }
 }

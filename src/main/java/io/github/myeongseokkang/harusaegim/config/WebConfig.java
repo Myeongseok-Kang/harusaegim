@@ -14,8 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(tokenAuthInterceptor)
                 .excludePathPatterns(
                         "/api/auth/**",
-                        "/error",
-                        "/h2-console/**"
+                        "/error"
                 );
     }
 }

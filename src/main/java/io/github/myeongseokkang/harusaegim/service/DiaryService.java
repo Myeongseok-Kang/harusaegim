@@ -21,16 +21,10 @@ public class DiaryService {
         this.openAIClient = openAIClient;
     }
 
-    /**
-     * 수동 입력(날짜, 장소, 한 일, 기분)으로 일기를 생성하고
-     * GPT를 호출해 자연스러운 본문을 만든다.
-     * 같은 날짜의 일기가 이미 있으면 그걸 그대로 반환.
-     */
     @Transactional
     public Diary create(Long userId, DiaryCreateRequest req) {
         LocalDate date = req.getDate();
 
-        // 같은 날짜 일기 있으면 그대로 리턴 (중복 생성 방지)
         Diary existing = diaryRepository.findByUserIdAndDate(userId, date).orElse(null);
         if (existing != null) {
             return existing;
@@ -82,10 +76,6 @@ public class DiaryService {
         diaryRepository.delete(d);
     }
 
-    /**
-     * feeling 텍스트 기반으로 0~20 사이 감정 점수 계산
-     * - 대충이라도 "항상 0"은 안 나오게 설계
-     */
     private int scoreFromFeeling(String feeling) {
         if (feeling == null || feeling.isBlank()) {
             return 10; // 중립
@@ -125,7 +115,7 @@ public class DiaryService {
                 "침울", "슬펐", "슬펐다", "슬픔", "무기력", "무기력했"
         };
 
-        int score = 10; // 기본 중립 점수
+        int score = 10;
 
         for (String s : strongPos) {
             if (f.contains(s)) score += 4;
@@ -140,21 +130,15 @@ public class DiaryService {
             if (f.contains(s)) score -= 2;
         }
 
-        // 이모지 보정
         if (f.contains("😀") || f.contains("😄") || f.contains("😁") || f.contains("🥳")) score += 5;
         if (f.contains("😞") || f.contains("😢") || f.contains("😭") || f.contains("😔")) score -= 5;
 
-        // 0~20으로 클램프
         if (score < 0) score = 0;
         if (score > 20) score = 20;
         return score;
     }
 
-    /**
-     * GPT를 호출해서 일기 본문 생성.
-     * - GPT가 맛이 가면 fallback 문장을 사용.
-     * - 물음표/줄바꿈 등은 후처리로 정리해서 저장.
-     */
+
     private String composeWithAI(String place,
                                  String activity,
                                  String feeling,
@@ -225,18 +209,13 @@ public class DiaryService {
         return text;
     }
 
-    /**
-     * 의미 없는 물음표/깨진 문자 정리
-     * - GPT가 이상하게 ?를 쓰더라도 전부 날려 버린다.
-     */
+
     private String cleanupWeirdChars(String text) {
         if (text == null) return "";
         String cleaned = text;
 
-        // 모든 물음표 제거 (연속이든 아니든 전부)
         cleaned = cleaned.replace("?", "");
 
-        // U+FFFD (�) 같은 치환 문자 제거
         cleaned = cleaned.replace("\uFFFD", "");
 
         // 공백 정리
@@ -244,11 +223,7 @@ public class DiaryService {
         return cleaned.trim();
     }
 
-    /**
-     * 줄바꿈/공백 정리
-     * - 여러 줄바꿈 → 공백 하나
-     * - 여러 공백 → 하나
-     */
+
     private String normalizeText(String text) {
         if (text == null) return "";
         String normalized = text.replace("\r\n", "\n");
