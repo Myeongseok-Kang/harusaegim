@@ -1,6 +1,7 @@
 package io.github.myeongseokkang.harusaegim.service;
 
 import io.github.myeongseokkang.harusaegim.dto.DiaryCreateRequest;
+import io.github.myeongseokkang.harusaegim.dto.DiaryResponse;
 import io.github.myeongseokkang.harusaegim.dto.DiaryUpdateRequest;
 import io.github.myeongseokkang.harusaegim.entity.Diary;
 import io.github.myeongseokkang.harusaegim.repository.DiaryRepository;
@@ -22,12 +23,12 @@ public class DiaryService {
     }
 
     @Transactional
-    public Diary create(Long userId, DiaryCreateRequest req) {
+    public DiaryResponse create(Long userId, DiaryCreateRequest req) {
         LocalDate date = req.getDate();
 
         Diary existing = diaryRepository.findByUserIdAndDate(userId, date).orElse(null);
         if (existing != null) {
-            return existing;
+            return DiaryResponse.from(existing);
         }
 
         int score = scoreFromFeeling(req.getFeeling());
@@ -45,35 +46,43 @@ public class DiaryService {
         diary.setContent(content);
         diary.setEmotionScore(score);
 
-        return diaryRepository.save(diary);
+        Diary saved = diaryRepository.save(diary);
+        return DiaryResponse.from(saved);
     }
 
-    public List<Diary> list(Long userId) {
-        return diaryRepository.findByUserIdOrderByDateDesc(userId);
+    public List<DiaryResponse> list(Long userId) {
+        return diaryRepository.findByUserIdOrderByDateDesc(userId).stream()
+                .map(DiaryResponse::from)
+                .toList();
     }
 
-    public Diary get(Long userId, Long id) {
+    public DiaryResponse get(Long userId, Long id) {
+        Diary d = getDiary(userId, id);
+        return DiaryResponse.from(d);
+    }
+
+    @Transactional
+    public DiaryResponse update(Long userId, Long id, DiaryUpdateRequest req) {
+        Diary d = getDiary(userId, id);
+        d.setContent(req.getContent());
+        if (req.getEmotionScore() != null) {
+            d.setEmotionScore(req.getEmotionScore());
+        }
+        return DiaryResponse.from(d);
+    }
+
+    @Transactional
+    public void delete(Long userId, Long id) {
+        Diary d = getDiary(userId, id);
+        diaryRepository.delete(d);
+    }
+
+    private Diary getDiary(Long userId, Long id) {
         Diary d = diaryRepository.findById(id).orElseThrow();
         if (!d.getUserId().equals(userId)) {
             throw new IllegalStateException("forbidden");
         }
         return d;
-    }
-
-    @Transactional
-    public Diary update(Long userId, Long id, DiaryUpdateRequest req) {
-        Diary d = get(userId, id);
-        d.setContent(req.getContent());
-        if (req.getEmotionScore() != null) {
-            d.setEmotionScore(req.getEmotionScore());
-        }
-        return d;
-    }
-
-    @Transactional
-    public void delete(Long userId, Long id) {
-        Diary d = get(userId, id);
-        diaryRepository.delete(d);
     }
 
     private int scoreFromFeeling(String feeling) {

@@ -1,8 +1,8 @@
 package io.github.myeongseokkang.harusaegim.controller;
 
 import io.github.myeongseokkang.harusaegim.dto.DiaryCreateRequest;
+import io.github.myeongseokkang.harusaegim.dto.DiaryResponse;
 import io.github.myeongseokkang.harusaegim.dto.DiaryUpdateRequest;
-import io.github.myeongseokkang.harusaegim.entity.Diary;
 import io.github.myeongseokkang.harusaegim.service.DiaryService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -20,28 +20,27 @@ public class DiaryController {
         this.diaryService = diaryService;
     }
 
-
     @PostMapping
-    public ResponseEntity<Diary> create(@RequestAttribute("userId") Long userId,
-                                        @Valid @RequestBody DiaryCreateRequest req) {
+    public ResponseEntity<DiaryResponse> create(@RequestAttribute("userId") Long userId,
+                                                @Valid @RequestBody DiaryCreateRequest req) {
         return ResponseEntity.ok(diaryService.create(userId, req));
     }
 
     @GetMapping
-    public ResponseEntity<List<Diary>> list(@RequestAttribute("userId") Long userId) {
+    public ResponseEntity<List<DiaryResponse>> list(@RequestAttribute("userId") Long userId) {
         return ResponseEntity.ok(diaryService.list(userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Diary> get(@RequestAttribute("userId") Long userId,
-                                     @PathVariable Long id) {
+    public ResponseEntity<DiaryResponse> get(@RequestAttribute("userId") Long userId,
+                                             @PathVariable Long id) {
         return ResponseEntity.ok(diaryService.get(userId, id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Diary> update(@RequestAttribute("userId") Long userId,
-                                        @PathVariable Long id,
-                                        @Valid @RequestBody DiaryUpdateRequest req) {
+    public ResponseEntity<DiaryResponse> update(@RequestAttribute("userId") Long userId,
+                                                @PathVariable Long id,
+                                                @Valid @RequestBody DiaryUpdateRequest req) {
         return ResponseEntity.ok(diaryService.update(userId, id, req));
     }
 
@@ -49,6 +48,6 @@ public class DiaryController {
     public ResponseEntity<Void> delete(@RequestAttribute("userId") Long userId,
                                        @PathVariable Long id) {
         diaryService.delete(userId, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().build(); // 필요하면 .noContent()로 바꿔도 됨
     }
 }
