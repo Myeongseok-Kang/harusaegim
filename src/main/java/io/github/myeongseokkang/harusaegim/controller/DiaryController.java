@@ -48,6 +48,6 @@ public class DiaryController {
     public ResponseEntity<Void> delete(@RequestAttribute("userId") Long userId,
                                        @PathVariable Long id) {
         diaryService.delete(userId, id);
-        return ResponseEntity.ok().build(); // 필요하면 .noContent()로 바꿔도 됨
+        return ResponseEntity.noContent().build();
     }
 }

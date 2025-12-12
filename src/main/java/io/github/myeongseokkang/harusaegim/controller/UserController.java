@@ -1,7 +1,7 @@
 package io.github.myeongseokkang.harusaegim.controller;
 
-import io.github.myeongseokkang.harusaegim.entity.User;
 import io.github.myeongseokkang.harusaegim.dto.UpdateUserRequest;
+import io.github.myeongseokkang.harusaegim.dto.UserResponse;
 import io.github.myeongseokkang.harusaegim.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,13 @@ public class UserController {
     public UserController(UserService userService) { this.userService = userService; }
 
     @GetMapping("/me")
-    public ResponseEntity<User> me(@RequestAttribute("userId") Long userId) {
+    public ResponseEntity<UserResponse> me(@RequestAttribute("userId") Long userId) {
         return ResponseEntity.ok(userService.get(userId));
     }
 
     @PutMapping("/me")
-    public ResponseEntity<User> update(@RequestAttribute("userId") Long userId, @Valid @RequestBody UpdateUserRequest req) {
+    public ResponseEntity<UserResponse> update(@RequestAttribute("userId") Long userId,
+                                               @Valid @RequestBody UpdateUserRequest req) {
         return ResponseEntity.ok(userService.update(userId, req));
     }
 }

@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("error", "validation");
         body.put("message", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
-        return ResponseEntity.badRequest().body(body);
+        return ResponseEntity.badRequest().body(body); //400
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("error", "invalid");
         body.put("message", e.getMessage());
-        return ResponseEntity.status(401).body(body);
+        return ResponseEntity.badRequest().body(body);
     }
 
     @ExceptionHandler(IllegalStateException.class)
