@@ -53,18 +53,38 @@ AI가 이를 바탕으로 자연스러운 일기를 생성하고,
 ## 📱 앱 화면 (UI)
 
 ### 🔐 로그인 / 회원가입
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8afd3d3b-8772-4482-b71d-ed856e9458d9" width="280" />
+  <img src="https://github.com/user-attachments/assets/0166ec53-d00a-4ba3-abb9-69e637504f6a" width="280" />
+</p>
 
 - 이메일과 비밀번호를 이용한 기본 로그인 및 회원가입 화면
 
 ### 🏠 홈
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ab2083f8-117c-4faf-b1bc-003702adca9b" width="280" />
+</p>
+
 - 오늘 일기 작성 여부에 따라 안내 문구와 주요 기능 버튼 제공
 
 ### ✍️ 기록하기
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d9ae1370-bc00-45d6-9d36-48eb0b2e9918" width="280" />
+</p>
+
 - 날짜, 장소, 한 일, 기분을 입력해 하루를 기록하고 AI 일기 생성 요청
 
 ### 📔 일기
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/baefdec1-309c-4060-8ab7-2a6beb4586cf" width="280" />
+</p>
+
 - 날짜별로 작성된 일기를 목록으로 확인하고 감정 점수를 함께 표시
 
 ### 📊 감정 리포트
-<img width="681" height="1421" alt="image" src="https://github.com/user-attachments/assets/d493dfc5-6c74-484b-8f93-8b39341808a3" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d493dfc5-6c74-484b-8f93-8b39341808a3" width="280" />
+</p>
+
 - 7일 / 30일 기준 감정 점수 변화를 간단한 그래프로 확인
+
